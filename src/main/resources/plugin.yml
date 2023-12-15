@@ -1,0 +1,15 @@
+name: EthicalVoting
+version: '${version}'
+main: net.egis.ethicalvoting.EthicalVoting
+api-version: '1.13'
+depend: [Votifier]
+authors: [Egis, EthicalDev]
+description: A voting listener with a wide array of different features.
+website: www.ethicaldev.cc
+commands:
+  ethicalvoting:
+    description: The main command to access features from EthicalVoting.
+    aliases: [ev]
+  vote:
+    description: The command to pull up server vote links from EthicalVoting.
+    aliases: [v]

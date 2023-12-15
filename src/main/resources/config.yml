@@ -1,0 +1,84 @@
+database:
+  #Can choose "MySQL" or "YAML"
+  #If using "YAML" the settings are ignored.
+  type: yaml
+
+  host: "localhost"
+  port: 3306
+  database: votingleaderboard
+  username: "admin"
+  password: "admin"
+
+# Update messages are only shown to opped players.
+update_checker:
+  enable: true
+
+leaderboard:
+  use-gui: false
+
+  # Used if not using the GUI.
+  leaderboard_header: "&6&lVoting Leaderboard"
+  leaderboard_footer: "&eYou are currently viewing the top %page% of %max-pages% pages."
+  leaderboard_entry: "&e%position%. &6%player% &e- &6%votes%"
+
+  gui:
+    # Always added last, above the items.
+    leaderboard_spots:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+    items:
+      1:
+        material: "DIAMOND"
+        name: "&6&lVoting Leaderboard"
+        lore:
+          - "&eYou are currently viewing the top %page% of %max-pages% pages."
+        slot: 0
+
+voting_rewards:
+  1:
+    # REQUIRED VALUES BELOW
+    commands:
+      - "give %player% diamond 1"
+    messages:
+      - "&aYou have received a diamond for voting!"
+    # OPTIONAL SETTINGS BELOW
+    required_services: #If you want to require a certain site to be used to obtain the reward.
+      - "MCSL"
+    firework: "" # RANDOM, BLUE, GREEN, PURPLE, RED, WHITE, YELLOW (If you want to have a firework go off when the reward is given.)
+    particle: "" # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
+    sound: "" # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
+    bossbar:
+      color: "" # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/boss/BarColor.html
+      text: "" # Use & for color codes.
+    title: "" # Use & for color codes.
+    subtitle: "" # Use & for color codes.
+
+cumulative_rewards:
+  10:
+    commands:
+      - "give %player% diamond 5"
+    messages:
+      - "&aYou have received 5 diamonds for voting 10 times!"
+    required_votes: 10
+  25:
+    commands:
+      - "give %player% diamond 10"
+    messages:
+      - "&aYou have received 10 diamonds for voting 25 times!"
+    required_votes: 25
+
+vote_party:
+  required_votes: 100
+  rewards:
+    1:
+      commands:
+        - "give %player% diamond 1"
+      messages:
+        - "&aYou have received a diamond for voting!"
