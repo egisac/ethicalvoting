@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 group = 'net.egis'
@@ -19,12 +20,21 @@ repositories {
         name = "nuvotifier-repo"
         url = "https://nexus.bencodez.com/repository/maven-public/"
     }
+    maven {
+        name =  "jitpack"
+        url = "https://jitpack.io"
+    }
 }
 
 dependencies {
     compileOnly "org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT"
     compileOnly "com.vexsoftware:nuvotifier-universal:2.7.2"
     compileOnly 'org.projectlombok:lombok:1.18.30'
+    implementation 'com.github.hamza-cskn.obliviate-invs:core:4.3.0'
+    implementation("com.github.cryptomorin:XSeries:9.8.0") {
+        transitive = false
+    }
+    implementation "net.kyori:adventure-api:4.14.0"
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
 
@@ -51,4 +61,14 @@ processResources {
     filesMatching('plugin.yml') {
         expand props
     }
+}
+
+tasks {
+    shadowJar {
+        relocate("com.cryptomorin.xseries", "net.egis.ethicalvoting.utils")
+    }
+}
+
+build {
+    dependsOn shadowJar
 }

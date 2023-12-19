@@ -1,6 +1,8 @@
 package net.egis.ethicalvoting;
 
 import lombok.Getter;
+import mc.obliviate.inventory.InventoryAPI;
+import net.egis.ethicalvoting.commands.EthicalVotingCommand;
 import net.egis.ethicalvoting.data.ProfileManager;
 import net.egis.ethicalvoting.data.StorageInterface;
 import net.egis.ethicalvoting.data.interfaces.MySQLInterface;
@@ -32,19 +34,26 @@ public final class EthicalVoting extends JavaPlugin {
     public void onEnable() {
         self = this;
 
+        new InventoryAPI(this).init();
+
         saveDefaultConfig();
         pickStorageType();
         loadPluginData();
         loadFeatures();
         registerEventListeners();
+        registerCommands();
 
         getLogger().info("Storage Type: " + storage.getAdapterType());
         checkUpdates();
+
+        getLogger().info("EthicalVoting has been successfully enabled.");
     }
 
     @Override
     public void onDisable() {
+        profiles.shutdown();
 
+        getLogger().info("EthicalVoting has been successfully disabled.");
     }
 
     /*
@@ -85,6 +94,12 @@ public final class EthicalVoting extends JavaPlugin {
         } else {
             storage = new YamlInterface(this);
         }
+    }
+
+    public void registerCommands() {
+        EthicalVotingCommand ethicalVotingCommand = new EthicalVotingCommand();
+        getCommand("ethicalvoting").setExecutor(ethicalVotingCommand);
+        getCommand("ethicalvoting").setTabCompleter(ethicalVotingCommand);
     }
 
     public void loadPluginData() {

@@ -8,7 +8,7 @@ import net.egis.ethicalvoting.EthicalVoting;
 import java.util.UUID;
 
 @Getter @Setter @AllArgsConstructor
-public class EthicalProfile {
+public class EthicalProfile implements Comparable<EthicalProfile> {
 
     private UUID uuid;
     private String lastUsername;
@@ -24,6 +24,11 @@ public class EthicalProfile {
         lastUsername = username;
         EthicalVoting plugin = EthicalVoting.getSelf();
         plugin.getProfiles().saveProfile(this);
+    }
+
+    @Override
+    public int compareTo(EthicalProfile o) {
+        return o.getVotes() - votes;
     }
 
 }
