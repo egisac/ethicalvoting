@@ -18,6 +18,7 @@ public class VoteRewardHandler {
     private final EthicalVoting plugin;
     private final List<VoteReward> rewards;
     private final List<CumulativeReward> cumulativeRewards;
+    private final VoteQueue voteQueue;
 
     public VoteRewardHandler(EthicalVoting plugin) {
         this.plugin = plugin;
@@ -25,6 +26,7 @@ public class VoteRewardHandler {
 
         rewards = new ArrayList<>();
         cumulativeRewards = new ArrayList<>();
+        voteQueue = new VoteQueue(this);
 
         ConfigurationSection rewardsSection = config.getConfigurationSection("voting_rewards");
         ConfigurationSection cumulativeRewardsSection = config.getConfigurationSection("cumulative_rewards");
@@ -34,38 +36,40 @@ public class VoteRewardHandler {
             List<String> messages = rewardSection.getStringList("messages");
             VoteReward vr = new VoteReward(commands, messages);
 
-            if (rewardSection.contains("required_services")) {
+            if (rewardSection.contains("required_services", false)) {
                 vr.setHasRequiredServices(true);
                 vr.setRequiredServices(rewardSection.getStringList("required_services"));
             }
 
-            if (rewardSection.contains("firework")) {
+            if (rewardSection.contains("firework", false)) {
+                vr.setHasFirework(true);
                 vr.setFirework(rewardSection.getString("firework"));
             }
 
-            if (rewardSection.contains("particle")) {
+            if (rewardSection.contains("particle", false)) {
                 vr.setHasParticle(true);
                 vr.setParticle(rewardSection.getString("particle"));
             }
 
-            if (rewardSection.contains("sound")) {
+            if (rewardSection.contains("sound", false)) {
                 vr.setHasSound(true);
                 vr.setSound(rewardSection.getString("sound"));
             }
 
-            if (rewardSection.contains("title")) {
+            if (rewardSection.contains("title", false)) {
                 vr.setHasTitle(true);
                 vr.setTitle(rewardSection.getString("title"));
             }
 
-            if (rewardSection.contains("subtitle")) {
+            if (rewardSection.contains("subtitle", false)) {
                 vr.setHasSubtitle(true);
                 vr.setSubtitle(rewardSection.getString("subtitle"));
             }
 
-            if (rewardSection.contains("bossbar")) {
+            if (rewardSection.contains("bossbar", false)) {
                 vr.setHasBossBar(true);
-                vr.setBossBar(rewardSection.getString("bossbar"));
+                vr.setBossBarText(rewardSection.getString("bossbar.text"));
+                vr.setBossBarColor(rewardSection.getString("bossbar.color"));
             }
 
             rewards.add(vr);
@@ -79,39 +83,40 @@ public class VoteRewardHandler {
 
             CumulativeReward vr = new CumulativeReward(requiredVotes, commands, messages);
 
-            if (rewardSection.contains("required_services")) {
+            if (rewardSection.contains("required_services", false)) {
                 vr.setHasRequiredServices(true);
                 vr.setRequiredServices(rewardSection.getStringList("required_services"));
             }
 
-            if (rewardSection.contains("firework")) {
+            if (rewardSection.contains("firework", false)) {
                 vr.setHasFirework(true);
                 vr.setFirework(rewardSection.getString("firework"));
             }
 
-            if (rewardSection.contains("particle")) {
+            if (rewardSection.contains("particle", false)) {
                 vr.setHasParticle(true);
                 vr.setParticle(rewardSection.getString("particle"));
             }
 
-            if (rewardSection.contains("sound")) {
+            if (rewardSection.contains("sound", false)) {
                 vr.setHasSound(true);
                 vr.setSound(rewardSection.getString("sound"));
             }
 
-            if (rewardSection.contains("title")) {
+            if (rewardSection.contains("title", false)) {
                 vr.setHasTitle(true);
                 vr.setTitle(rewardSection.getString("title"));
             }
 
-            if (rewardSection.contains("subtitle")) {
+            if (rewardSection.contains("subtitle", false)) {
                 vr.setHasSubtitle(true);
                 vr.setSubtitle(rewardSection.getString("subtitle"));
             }
 
-            if (rewardSection.contains("bossbar")) {
+            if (rewardSection.contains("bossbar", false)) {
                 vr.setHasBossBar(true);
-                vr.setBossBar(rewardSection.getString("bossbar"));
+                vr.setBossBarText(rewardSection.getString("bossbar.text"));
+                vr.setBossBarColor(rewardSection.getString("bossbar.color"));
             }
 
             cumulativeRewards.add(vr);
@@ -122,7 +127,10 @@ public class VoteRewardHandler {
     // TODO: Add a way to send rewards to offline players.
     public void executeRewards(EthicalProfile profile) {
         Player player = plugin.getServer().getPlayer(profile.getUuid());
-        if (player == null) return;
+        if (player == null) {
+            voteQueue.addVote(profile);
+            return;
+        }
         for (VoteReward reward : rewards) {
             reward.execute(player, plugin);
         }

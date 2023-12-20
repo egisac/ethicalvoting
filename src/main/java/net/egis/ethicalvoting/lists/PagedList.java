@@ -10,6 +10,16 @@ public class PagedList {
         this.list = list;
     }
 
+    public int getPages(int elementsPerPage) {
+        //Get the number of pages in the list using the elementsPerPage.
+
+        if (list == null || list.isEmpty()) {
+            return 0;
+        }
+
+        return (int) Math.ceil((double) list.size() / elementsPerPage);
+    }
+
     public List<?> getPage(int page, int elementsPerPage) {
         //Split a list into pages using the current page and elementsPerPage.
 

@@ -24,12 +24,17 @@ repositories {
         name =  "jitpack"
         url = "https://jitpack.io"
     }
+    maven {
+        name = "extendedclip-repo"
+        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
 }
 
 dependencies {
     compileOnly "org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT"
     compileOnly "com.vexsoftware:nuvotifier-universal:2.7.2"
     compileOnly 'org.projectlombok:lombok:1.18.30'
+    compileOnly 'me.clip:placeholderapi:2.11.5'
     implementation 'com.github.hamza-cskn.obliviate-invs:core:4.3.0'
     implementation("com.github.cryptomorin:XSeries:9.8.0") {
         transitive = false

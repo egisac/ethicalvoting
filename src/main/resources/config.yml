@@ -14,32 +14,143 @@ update_checker:
   enable: true
 
 leaderboard:
-  use-gui: false
+  use_gui: true
 
   # Used if not using the GUI.
   leaderboard_header: "&6&lVoting Leaderboard"
-  leaderboard_footer: "&eYou are currently viewing the top %page% of %max-pages% pages."
+  leaderboard_footer: "&eYou are currently viewing the top %page% of %max_pages% pages."
   leaderboard_entry: "&e%position%. &6%player% &e- &6%votes%"
 
   gui:
+    gui_name: "&6&lVoting Leaderboard"
+    gui_rows: 3
+
+    # The name and lore of the players in the gui.
+    entry:
+      name: "&e%position%. &6%player% &e- &6%votes%"
+      lore: []
+    entry_empty:
+      name: "&c&l???"
+      lore: []
+
     # Always added last, above the items.
     leaderboard_spots:
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      - 7
-      - 8
-      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+      - 14
+      - 15
+      - 16
+
+    # Added below the layer where the leaderboard spots are.
     items:
       1:
         material: "DIAMOND"
-        name: "&6&lVoting Leaderboard"
+        name: "&6&lVoting Leaderboard %player_name%" # You can use PAPI placeholders for the player opening the inv.
         lore:
-          - "&eYou are currently viewing the top %page% of %max-pages% pages."
+          - "&eYou are currently viewing the top %page% of %max_pages% pages."
+        slot: 25
+      2:
+        material: "BLACK_STAINED_GLASS_PANE"
+        name: "&6"
+        lore: []
         slot: 0
+      3:
+        material: "BLACK_STAINED_GLASS_PANE"
+        name: "&6"
+        lore: [ ]
+        slot: 1
+      4:
+        material: "BLACK_STAINED_GLASS_PANE"
+        name: "&6"
+        lore: [ ]
+        slot: 2
+      5:
+        material: "BLACK_STAINED_GLASS_PANE"
+        name: "&6"
+        lore: [ ]
+        slot: 3
+      6:
+        material: "BLACK_STAINED_GLASS_PANE"
+        name: "&6"
+        lore: [ ]
+        slot: 4
+      7:
+        material: "BLACK_STAINED_GLASS_PANE"
+        name: "&6"
+        lore: [ ]
+        slot: 5
+      8:
+        material: "BLACK_STAINED_GLASS_PANE"
+        name: "&6"
+        lore: [ ]
+        slot: 6
+      9:
+        material: "BLACK_STAINED_GLASS_PANE"
+        name: "&6"
+        lore: [ ]
+        slot: 7
+      10:
+        material: "BLACK_STAINED_GLASS_PANE"
+        name: "&6"
+        lore: [ ]
+        slot: 8
+      11:
+        material: "BLACK_STAINED_GLASS_PANE"
+        name: "&6"
+        lore: [ ]
+        slot: 9
+      12:
+        material: "BLACK_STAINED_GLASS_PANE"
+        name: "&6"
+        lore: [ ]
+        slot: 17
+      13:
+        amount: 1
+        material: "PAPER"
+        name: "&6Previous Page"
+        lore: [ ]
+        action: "previous_page"
+        slot: 18
+      14:
+        material: "BLACK_STAINED_GLASS_PANE"
+        name: "&6"
+        lore: [ ]
+        slot: 19
+      15:
+        material: "BLACK_STAINED_GLASS_PANE"
+        name: "&6"
+        lore: [ ]
+        slot: 20
+      16:
+        material: "BLACK_STAINED_GLASS_PANE"
+        name: "&6"
+        lore: [ ]
+        slot: 21
+      17:
+        material: "BLACK_STAINED_GLASS_PANE"
+        name: "&6"
+        lore: [ ]
+        slot: 22
+      18:
+        material: "BLACK_STAINED_GLASS_PANE"
+        name: "&6"
+        lore: [ ]
+        slot: 23
+      19:
+        material: "BLACK_STAINED_GLASS_PANE"
+        name: "&6"
+        lore: [ ]
+        slot: 24
+      20:
+        amount: 1
+        material: "PAPER"
+        name: "&6Next Page"
+        lore: [ ]
+        action: "next_page"
+        slot: 26
+
 
 voting_rewards:
   1:
@@ -51,14 +162,13 @@ voting_rewards:
     # OPTIONAL SETTINGS BELOW
     required_services: #If you want to require a certain site to be used to obtain the reward.
       - "MCSL"
-    firework: "" # RANDOM, BLUE, GREEN, PURPLE, RED, WHITE, YELLOW (If you want to have a firework go off when the reward is given.)
-    particle: "" # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
-    sound: "" # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
+    firework: "GREEN" # RANDOM, BLUE, GREEN, PURPLE, RED, WHITE, YELLOW (If you want to have a firework go off when the reward is given.)
+    sound: "BLOCK_AMETHYST_CLUSTER_HIT" # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
     bossbar:
-      color: "" # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/boss/BarColor.html
-      text: "" # Use & for color codes.
-    title: "" # Use & for color codes.
-    subtitle: "" # Use & for color codes.
+      color: "PINK" # https://hub.spigotmc.org/javadocs/spigot/org/bukkit/boss/BarColor.html
+      text: "&e&lThank you for voting." # Use & for color codes.
+    title: "&a&lThanks for voting" # Use & for color codes.
+    subtitle: "&fYou have been given rewards" # Use & for color codes.
 
 cumulative_rewards:
   10:
@@ -82,3 +192,15 @@ vote_party:
         - "give %player% diamond 1"
       messages:
         - "&aYou have received a diamond for voting!"
+
+messages:
+  prefix: "&x&0&8&4&c&f&b&lE&x&1&c&5&b&f&b&lt&x&3&1&6&a&f&b&lh&x&4&5&7&8&f&c&li&x&5&a&8&7&f&c&lc&x&6&e&9&6&f&c&la&x&8&3&a&5&f&c&ll&x&9&7&b&3&f&c&lV&x&a&b&c&2&f&c&lo&x&c&0&d&1&f&d&lt&x&d&4&e&0&f&d&li&x&e&9&e&e&f&d&ln&x&f&d&f&d&f&d&lg &8> &r"
+  help:
+    - "&e&lEthicalVoting Help"
+    - "&e/ev help &7- &eShows this help menu."
+    - "&e/ev vote &7- &eShows the vote links."
+    - "&e/ev leaderboard &7- &eShows the voting leaderboard."
+  vote:
+    - "&e&lVote Links"
+    - "&eVote on these sites to receive rewards!"
+    - "&e1.) &fhttps://www.yoursite.com/vote"

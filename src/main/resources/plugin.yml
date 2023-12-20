@@ -3,6 +3,7 @@ version: '${version}'
 main: net.egis.ethicalvoting.EthicalVoting
 api-version: '1.13'
 depend: [Votifier]
+softdepend: [PlaceholderAPI]
 authors: [Egis, EthicalDev]
 description: A voting listener with a wide array of different features.
 website: www.ethicaldev.cc

@@ -3,14 +3,18 @@ package net.egis.ethicalvoting;
 import lombok.Getter;
 import mc.obliviate.inventory.InventoryAPI;
 import net.egis.ethicalvoting.commands.EthicalVotingCommand;
+import net.egis.ethicalvoting.commands.VoteCommand;
 import net.egis.ethicalvoting.data.ProfileManager;
 import net.egis.ethicalvoting.data.StorageInterface;
 import net.egis.ethicalvoting.data.interfaces.MySQLInterface;
 import net.egis.ethicalvoting.data.interfaces.YamlInterface;
 import net.egis.ethicalvoting.https.UpdateChecker;
+import net.egis.ethicalvoting.integrations.EthicalPAPI;
+import net.egis.ethicalvoting.listeners.FireworkDamageListener;
 import net.egis.ethicalvoting.listeners.PlayerConnectionListener;
 import net.egis.ethicalvoting.listeners.VotifierVoteListener;
 import net.egis.ethicalvoting.rewards.VoteRewardHandler;
+import net.egis.ethicalvoting.utils.Translate;
 import net.egis.ethicalvoting.voteparty.VotePartyHandler;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -27,6 +31,7 @@ public final class EthicalVoting extends JavaPlugin {
     private ProfileManager profiles;
     private PlayerConnectionListener connectionListener;
     private VotifierVoteListener voteListener;
+    private FireworkDamageListener fireworkDamageListener;
     private VotePartyHandler votePartyHandler;
     private VoteRewardHandler voteRewardHandler;
 
@@ -42,6 +47,7 @@ public final class EthicalVoting extends JavaPlugin {
         loadFeatures();
         registerEventListeners();
         registerCommands();
+        registerIntegrations();
 
         getLogger().info("Storage Type: " + storage.getAdapterType());
         checkUpdates();
@@ -52,8 +58,18 @@ public final class EthicalVoting extends JavaPlugin {
     @Override
     public void onDisable() {
         profiles.shutdown();
+        voteRewardHandler.getVoteQueue().shutdown();
 
         getLogger().info("EthicalVoting has been successfully disabled.");
+    }
+
+    public void registerIntegrations() {
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new EthicalPAPI().register();
+            getLogger().info("PlaceholderAPI integration has been successfully enabled.");
+        } else {
+            getLogger().warning("PlaceholderAPI integration has failed to load.");
+        }
     }
 
     /*
@@ -100,6 +116,9 @@ public final class EthicalVoting extends JavaPlugin {
         EthicalVotingCommand ethicalVotingCommand = new EthicalVotingCommand();
         getCommand("ethicalvoting").setExecutor(ethicalVotingCommand);
         getCommand("ethicalvoting").setTabCompleter(ethicalVotingCommand);
+        VoteCommand voteCommand = new VoteCommand();
+        getCommand("vote").setExecutor(voteCommand);
+        getCommand("vote").setTabCompleter(voteCommand);
     }
 
     public void loadPluginData() {
@@ -109,8 +128,10 @@ public final class EthicalVoting extends JavaPlugin {
     public void registerEventListeners() {
         this.connectionListener = new PlayerConnectionListener(this);
         this.voteListener = new VotifierVoteListener(this);
+        this.fireworkDamageListener = new FireworkDamageListener();
         getServer().getPluginManager().registerEvents(connectionListener, this);
         getServer().getPluginManager().registerEvents(voteListener, this);
+        getServer().getPluginManager().registerEvents(fireworkDamageListener, this);
     }
 
     public void loadFeatures() {
@@ -123,7 +144,8 @@ public final class EthicalVoting extends JavaPlugin {
             if (!this.getDescription().getVersion().equals(version)) {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     if (player.isOp()) {
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&x&0&8&4&c&f&b&lE&x&1&c&5&b&f&b&lt&x&3&1&6&a&f&b&lh&x&4&5&7&8&f&c&li&x&5&a&8&7&f&c&lc&x&6&e&9&6&f&c&la&x&8&3&a&5&f&c&ll&x&9&7&b&3&f&c&lV&x&a&b&c&2&f&c&lo&x&c&0&d&1&f&d&lt&x&d&4&e&0&f&d&li&x&e&9&e&e&f&d&ln&x&f&d&f&d&f&d&lg &8&l> &7There is a new &aupdate &7available &fhttps://www.spigot.org/"));
+                        String prefix = getConfig().getString("messages.prefix");
+                        player.sendMessage(Translate.translate(prefix + "&7There is a new &aupdate &7available &fhttps://www.spigot.org/"));
                         getLogger().warning("There is a new update available at https://www.spigot.org/ [" + version + "]");
                     }
                 }

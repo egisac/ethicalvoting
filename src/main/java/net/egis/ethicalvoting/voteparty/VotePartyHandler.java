@@ -62,7 +62,8 @@ public class VotePartyHandler {
 
             if (rewardSection.contains("bossbar")) {
                 vr.setHasBossBar(true);
-                vr.setBossBar(rewardSection.getString("bossbar"));
+                vr.setBossBarText(rewardSection.getString("bossbar.text"));
+                vr.setBossBarColor(rewardSection.getString("bossbar.color"));
             }
 
             rewards.add(vr);
@@ -74,6 +75,11 @@ public class VotePartyHandler {
         if (globalVotes % requiredVotes == 0) {
             performVoteParty();
         }
+    }
+
+    public int getRemainder() {
+        int globalVotes = plugin.getStorage().getGlobalVotes();
+        return requiredVotes - (globalVotes % requiredVotes);
     }
 
     public void performVoteParty() {
